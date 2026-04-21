@@ -482,9 +482,12 @@
 
     {{-- Totals --}}
     @php
-        $currency = $invoice->currency?->code ?? 'KSh';
-        $subtotal = $invoice->items->sum('total');
-        $discount = (float) $invoice->discount;
+        $currency     = $invoice->currency?->code ?? 'KSh';
+        $subtotal     = $invoice->items->sum('total');
+        $discount     = (float) $invoice->discount;
+        $afterDiscount = round($subtotal * (1 - $discount / 100), 2);
+        $taxRate      = $invoice->tax ? (float) $invoice->tax->value : 0;
+        $taxAmount    = round($afterDiscount * $taxRate / 100, 2);
     @endphp
     <div class="doc-totals">
         <table class="totals-table">
@@ -496,6 +499,12 @@
             <tr>
                 <td class="label">Discount ({{ $discount }}%)</td>
                 <td class="amount">– {{ $currency }} {{ number_format($subtotal * $discount / 100, 2) }}</td>
+            </tr>
+            @endif
+            @if($taxAmount > 0)
+            <tr>
+                <td class="label">{{ $invoice->tax->name }} ({{ $invoice->tax->value }}%)</td>
+                <td class="amount">+ {{ $currency }} {{ number_format($taxAmount, 2) }}</td>
             </tr>
             @endif
             <tr class="total-row">

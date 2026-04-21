@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             LivestockTypeSeeder::class,
             FarmSessionTemplateSeeder::class,
             PaymentModeSeeder::class,
+            TaxSeeder::class,
             UserSeeder::class,
         ]);
     }

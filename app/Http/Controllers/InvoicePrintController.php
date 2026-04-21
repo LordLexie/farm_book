@@ -8,7 +8,7 @@ class InvoicePrintController extends Controller
 {
     public function show(int $id)
     {
-        $invoice = Invoice::with(['customer', 'status', 'currency', 'items.unitOfMeasure', 'items.invoiceable', 'creator'])
+        $invoice = Invoice::with(['customer', 'status', 'currency', 'tax', 'items.unitOfMeasure', 'items.invoiceable', 'creator'])
             ->findOrFail($id);
 
         return view('invoices.print', compact('invoice'));

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\BillingCycle;
 use App\Models\Currency;
+use App\Models\Tax;
 use App\Models\FarmSessionTemplate;
 use App\Models\PaymentMode;
 use App\Models\Gender;
@@ -38,6 +39,11 @@ class LookupController extends Controller
     public function currencies(): JsonResponse
     {
         return response()->json(['currencies' => Currency::orderBy('name')->get()]);
+    }
+
+    public function taxes(): JsonResponse
+    {
+        return response()->json(['taxes' => Tax::orderBy('value')->get()]);
     }
 
     public function billingCycles(): JsonResponse

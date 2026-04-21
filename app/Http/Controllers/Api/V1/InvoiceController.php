@@ -14,7 +14,7 @@ class InvoiceController extends Controller
 {
     private function relations(): array
     {
-        return ['customer', 'status', 'currency', 'items.unitOfMeasure', 'items.invoiceable'];
+        return ['customer', 'status', 'currency', 'tax', 'items.unitOfMeasure', 'items.invoiceable'];
     }
 
     public function index(Request $request): JsonResponse
@@ -44,6 +44,7 @@ class InvoiceController extends Controller
             'customer_id' => $request->input('customer_id'),
             'status_id'   => $request->input('status_id', $active),
             'currency_id' => $request->input('currency_id'),
+            'tax_id'      => $request->input('tax_id'),
             'date'        => $request->input('date'),
             'discount'    => $request->input('discount', 0),
             'total'       => 0,
@@ -52,7 +53,8 @@ class InvoiceController extends Controller
             'created_by'  => $request->user()?->id,
         ]);
 
-        [$total] = $this->syncItems($invoice->id, $request->input('items', []), (float) $invoice->discount);
+        $taxRate = $invoice->tax ? (float) $invoice->tax->value : 0;
+        [$total] = $this->syncItems($invoice->id, $request->input('items', []), (float) $invoice->discount, $taxRate);
 
         $customer = $invoice->customer;
         ['applied' => $applied, 'balance' => $balance] = CreditService::apply($customer, $total);
@@ -76,14 +78,16 @@ class InvoiceController extends Controller
         $invoice  = Invoice::findOrFail($id);
         $oldTotal = (float) $invoice->total;
         $fields   = array_filter(
-            $request->only(['customer_id', 'status_id', 'currency_id', 'date', 'discount']),
+            $request->only(['customer_id', 'status_id', 'currency_id', 'tax_id', 'date', 'discount']),
             fn($v) => $v !== null,
         );
         $invoice->update($fields);
 
         if ($request->has('items')) {
             $invoice->items()->delete();
-            [$total] = $this->syncItems($invoice->id, $request->input('items'), (float) $invoice->fresh()->discount);
+            $fresh   = $invoice->fresh(['tax']);
+            $taxRate = $fresh->tax ? (float) $fresh->tax->value : 0;
+            [$total] = $this->syncItems($invoice->id, $request->input('items'), (float) $fresh->discount, $taxRate);
             $balance = round($total - (float) $invoice->amount_paid, 2);
             $invoice->update(['total' => $total, 'balance' => $balance]);
             $invoice->customer()->increment('amount_due', round($total - $oldTotal, 2));
@@ -105,7 +109,7 @@ class InvoiceController extends Controller
         return response()->json(['url' => url("/invoices/{$id}/print")]);
     }
 
-    private function syncItems(int $invoiceId, array $rows, float $discountPct): array
+    private function syncItems(int $invoiceId, array $rows, float $discountPct, float $taxRate = 0): array
     {
         $subtotal = 0;
         foreach ($rows as $row) {
@@ -121,7 +125,8 @@ class InvoiceController extends Controller
                 'total'              => $lineTotal,
             ]);
         }
-        $total = round($subtotal * (1 - $discountPct / 100), 2);
+        $afterDiscount = round($subtotal * (1 - $discountPct / 100), 2);
+        $total         = round($afterDiscount * (1 + $taxRate / 100), 2);
         return [$total, $subtotal];
     }
 }

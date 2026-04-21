@@ -80,6 +80,7 @@ Route::prefix('v1')->group(function () {
         Route::get('service-types', [LookupController::class, 'serviceTypes']);
         Route::get('item-categories', [LookupController::class, 'itemCategories']);
         Route::get('farm-sessions', [LookupController::class, 'farmSessions']);
+        Route::get('taxes', [LookupController::class, 'taxes']);
 
         Route::post('{resource}', [LookupController::class, 'store']);
         Route::patch('{resource}/{id}', [LookupController::class, 'update']);
