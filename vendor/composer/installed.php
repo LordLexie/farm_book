@@ -3,7 +3,7 @@
         'name' => 'laravel/farm-app',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'fc9c9fa77a0f2ea167d31990cfe39eb0d9ac2342',
+        'reference' => '01b9b3701232b821873f60af478c7377d9e7906e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -391,7 +391,7 @@
         'laravel/farm-app' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'fc9c9fa77a0f2ea167d31990cfe39eb0d9ac2342',
+            'reference' => '01b9b3701232b821873f60af478c7377d9e7906e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
