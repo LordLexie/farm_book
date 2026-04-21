@@ -24,6 +24,8 @@ class UserSeeder extends Seeder
             'view purchases', 'manage purchases',
             'view payments', 'manage payments',
             'view quotations', 'manage quotations',
+            'view pro-forma-invoices', 'manage pro-forma-invoices',
+            'view documents', 'manage documents',
             'view reports', 'manage users',
         ];
 
