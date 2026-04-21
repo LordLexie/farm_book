@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\LookupController;
 use App\Http\Controllers\Api\V1\AnalyticsController;
+use App\Http\Controllers\Api\V1\DocumentController;
 
 Route::prefix('v1')->group(function () {
 
@@ -87,6 +88,12 @@ Route::prefix('v1')->group(function () {
         Route::get('item-categories', [LookupController::class, 'itemCategories']);
         Route::get('farm-sessions', [LookupController::class, 'farmSessions']);
         Route::get('taxes', [LookupController::class, 'taxes']);
+
+        // Documents
+        Route::get('documents', [DocumentController::class, 'index']);
+        Route::post('documents', [DocumentController::class, 'store']);
+        Route::delete('documents/{document}', [DocumentController::class, 'destroy']);
+        Route::get('documents/{document}/download', [DocumentController::class, 'download']);
 
         Route::post('{resource}', [LookupController::class, 'store']);
         Route::patch('{resource}/{id}', [LookupController::class, 'update']);
