@@ -1,0 +1,43 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('purchases', function (Blueprint $table) {
+            $table->id();
+            $table->string('code', 50)->unique();
+            $table->foreignId('supplier_id')->constrained('suppliers');
+            $table->foreignId('quotation_id')->nullable()->constrained('quotations')->nullOnDelete();
+            $table->foreignId('status_id')->constrained('statuses');
+            $table->foreignId('currency_id')->constrained('currencies');
+            $table->date('date');
+            $table->decimal('total', 15, 2)->default(0);
+            $table->text('notes')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('purchase_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('purchase_id')->constrained('purchases')->cascadeOnDelete();
+            $table->foreignId('item_master_id')->constrained('item_masters');
+            $table->foreignId('unit_of_measure_id')->constrained('unit_of_measures');
+            $table->decimal('quantity', 15, 3);
+            $table->decimal('unit_price', 15, 4);
+            $table->decimal('total', 15, 2);
+            $table->text('notes')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('purchase_items');
+        Schema::dropIfExists('purchases');
+    }
+};

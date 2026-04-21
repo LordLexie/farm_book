@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quotation <?php echo e($quotation->code); ?> – Rilip Traders Limited</title>
+    <title>Invoice {{ $invoice->code }} – Rilip Traders Limited</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -97,7 +97,7 @@
             background: #145449;
             color: #fff;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
         }
 
         .meta-cell {
@@ -210,7 +210,7 @@
         }
 
         .totals-table {
-            width: 280px;
+            width: 300px;
         }
 
         .totals-table td {
@@ -226,6 +226,12 @@
         .totals-table td.amount {
             text-align: right;
             font-weight: 600;
+            min-width: 110px;
+        }
+
+        .totals-table tr.divider td {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 8px;
         }
 
         .totals-table tr.total-row td {
@@ -236,29 +242,87 @@
             padding: 10px 12px;
         }
 
-        /* ── Notes ── */
-        .doc-notes {
-            margin: 8px 32px 24px;
+        .totals-table tr.balance-row td {
+            background: #145449;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 12px;
+        }
+
+        .totals-table tr.paid-row td {
+            color: #1b6b5a;
+            font-size: 12px;
+        }
+
+        /* ── Payment instructions ── */
+        .doc-payment {
+            margin: 8px 32px 0;
             padding: 14px 16px;
             background: #f5faf8;
             border-left: 3px solid #1b6b5a;
             border-radius: 0 4px 4px 0;
         }
 
-        .notes-label {
+        .payment-label {
             font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #1b6b5a;
             font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 24px;
+            font-size: 12px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        /* ── Terms ── */
+        .doc-terms {
+            margin: 8px 32px 24px;
+            padding: 14px 16px;
+            background: #fff8f0;
+            border-left: 3px solid #e0a020;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .terms-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #b07010;
+            font-weight: 700;
             margin-bottom: 6px;
         }
 
-        .notes-body {
+        .terms-body {
             font-size: 12px;
             line-height: 1.6;
-            color: #444;
-            white-space: pre-line;
+            color: #555;
+        }
+
+        /* ── Signature ── */
+        .doc-signature {
+            margin: 0 32px 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .signature-block {
+            text-align: center;
+            width: 200px;
+        }
+
+        .signature-line {
+            border-top: 1px solid #999;
+            padding-top: 6px;
+            font-size: 11px;
+            color: #666;
         }
 
         /* ── Footer ── */
@@ -308,10 +372,10 @@
 
 <div class="document">
 
-    
+    {{-- Header --}}
     <div class="doc-header">
         <div class="header-left">
-            <img src="<?php echo e(asset('images/rtl-logo.png')); ?>" alt="Rilip Traders Limited" class="header-logo">
+            <img src="{{ asset('images/rtl-logo.png') }}" alt="Rilip Traders Limited" class="header-logo">
             <div class="header-company">
                 <p><strong>Rilip Traders Limited</strong></p>
                 <p>123 Commerce Street, Industrial Area</p>
@@ -321,32 +385,36 @@
             </div>
         </div>
         <div class="header-right">
-            <div class="doc-type">QUOTATION</div>
-            <div class="doc-subtype">Tax Quotation</div>
+            <div class="doc-type">INVOICE</div>
+            <div class="doc-subtype">Tax Invoice</div>
         </div>
     </div>
 
-    
+    {{-- Meta bar --}}
     <div class="doc-meta">
         <div class="meta-cell">
-            <div class="meta-label">Quotation No.</div>
-            <div class="meta-value"><?php echo e($quotation->code); ?></div>
+            <div class="meta-label">Invoice No.</div>
+            <div class="meta-value">{{ $invoice->code }}</div>
         </div>
         <div class="meta-cell">
-            <div class="meta-label">Quotation Date</div>
-            <div class="meta-value"><?php echo e($quotation->date->format('d M Y')); ?></div>
+            <div class="meta-label">Invoice Date</div>
+            <div class="meta-value">{{ $invoice->date->format('d M Y') }}</div>
         </div>
         <div class="meta-cell">
-            <div class="meta-label">Valid Until</div>
-            <div class="meta-value"><?php echo e($quotation->valid_until ? $quotation->valid_until->format('d M Y') : '—'); ?></div>
+            <div class="meta-label">Due Date</div>
+            <div class="meta-value">{{ $invoice->date->addDays(14)->format('d M Y') }}</div>
         </div>
         <div class="meta-cell">
-            <div class="meta-label">Prepared By</div>
-            <div class="meta-value"><?php echo e($quotation->creator?->name ?? '—'); ?></div>
+            <div class="meta-label">Currency</div>
+            <div class="meta-value">{{ $invoice->currency?->code ?? 'KSH' }}</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">VAT Reg. No.</div>
+            <div class="meta-value">P051234567W</div>
         </div>
     </div>
 
-    
+    {{-- Address block --}}
     <div class="doc-addresses">
         <div>
             <div class="address-label">From</div>
@@ -360,73 +428,123 @@
             </div>
         </div>
         <div>
-            <div class="address-label">Prepared For</div>
-            <div class="address-name"><?php echo e($quotation->customer->name); ?></div>
+            <div class="address-label">Bill To</div>
+            <div class="address-name">{{ $invoice->customer->name }}</div>
             <div class="address-body">
-                <?php if($quotation->customer->address): ?>
-                    <?php echo e($quotation->customer->address); ?><br>
-                <?php endif; ?>
-                <?php if($quotation->customer->email): ?>
-                    <?php echo e($quotation->customer->email); ?><br>
-                <?php endif; ?>
-                <?php if($quotation->customer->phone): ?>
-                    <?php echo e($quotation->customer->phone); ?>
-
-                <?php endif; ?>
+                @if($invoice->customer->address)
+                    {{ $invoice->customer->address }}<br>
+                @endif
+                @if($invoice->customer->email)
+                    {{ $invoice->customer->email }}<br>
+                @endif
+                @if($invoice->customer->phone)
+                    {{ $invoice->customer->phone }}
+                @endif
             </div>
         </div>
     </div>
 
-    
+    {{-- Items table --}}
     <div class="doc-table-wrap">
         <table class="doc-table">
             <thead>
                 <tr>
-                    <th style="width:40%">Description</th>
+                    <th style="width:42%">Description</th>
                     <th class="text-right" style="width:10%">Qty</th>
-                    <th class="text-right" style="width:10%">Unit</th>
-                    <th class="text-right" style="width:18%">Unit Price (KSH)</th>
-                    <th class="text-right" style="width:22%">Amount (KSH)</th>
+                    <th style="width:10%">Unit</th>
+                    <th class="text-right" style="width:18%">Unit Price ({{ $invoice->currency?->code ?? 'KSH' }})</th>
+                    <th class="text-right" style="width:20%">Amount ({{ $invoice->currency?->code ?? 'KSH' }})</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $__currentLoopData = $quotation->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                @foreach($invoice->items as $item)
+                @php
+                    $name = $item->invoiceable?->name
+                        ?? $item->invoiceable?->description
+                        ?? class_basename($item->invoiceable_type ?? 'Item');
+                @endphp
                 <tr>
                     <td>
-                        <div class="item-name"><?php echo e($item->name); ?></div>
-                        <?php if($item->description): ?>
-                            <div class="item-desc"><?php echo e($item->description); ?></div>
-                        <?php endif; ?>
+                        <div class="item-name">{{ $name }}</div>
+                        @if($item->invoiceable && isset($item->invoiceable->description) && $item->invoiceable->description !== $name)
+                            <div class="item-desc">{{ $item->invoiceable->description }}</div>
+                        @endif
                     </td>
-                    <td class="text-right"><?php echo e(number_format($item->quantity, 2)); ?></td>
-                    <td class="text-right"><?php echo e($item->unitOfMeasure?->code ?? '—'); ?></td>
-                    <td class="text-right"><?php echo e(number_format($item->unit_price, 2)); ?></td>
-                    <td class="text-right"><?php echo e(number_format($item->total, 2)); ?></td>
+                    <td class="text-right">{{ number_format($item->quantity, 2) }}</td>
+                    <td>{{ $item->unitOfMeasure?->code ?? '—' }}</td>
+                    <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
+                    <td class="text-right">{{ number_format($item->total, 2) }}</td>
                 </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                @endforeach
             </tbody>
         </table>
     </div>
 
-    
+    {{-- Totals --}}
+    @php
+        $currency = $invoice->currency?->code ?? 'KSh';
+        $subtotal = $invoice->items->sum('total');
+        $discount = (float) $invoice->discount;
+    @endphp
     <div class="doc-totals">
         <table class="totals-table">
-            <tr class="total-row">
-                <td class="label" style="color:rgba(255,255,255,0.8)">TOTAL DUE</td>
-                <td class="amount">KSh <?php echo e(number_format($quotation->total, 2)); ?></td>
+            <tr>
+                <td class="label">Subtotal</td>
+                <td class="amount">{{ $currency }} {{ number_format($subtotal, 2) }}</td>
             </tr>
+            @if($discount > 0)
+            <tr>
+                <td class="label">Discount ({{ $discount }}%)</td>
+                <td class="amount">– {{ $currency }} {{ number_format($subtotal * $discount / 100, 2) }}</td>
+            </tr>
+            @endif
+            <tr class="total-row">
+                <td class="label" style="color:rgba(255,255,255,0.8)">Total Due</td>
+                <td class="amount">{{ $currency }} {{ number_format($invoice->total, 2) }}</td>
+            </tr>
+            @if((float)$invoice->amount_paid > 0)
+            <tr class="paid-row">
+                <td class="label">Amount Paid</td>
+                <td class="amount">– {{ $currency }} {{ number_format($invoice->amount_paid, 2) }}</td>
+            </tr>
+            <tr class="balance-row">
+                <td class="label" style="color:rgba(255,255,255,0.8)">Balance Due</td>
+                <td class="amount">{{ $currency }} {{ number_format($invoice->balance, 2) }}</td>
+            </tr>
+            @endif
         </table>
     </div>
 
-    
-    <?php if($quotation->notes): ?>
-    <div class="doc-notes">
-        <div class="notes-label">Notes &amp; Terms</div>
-        <div class="notes-body"><?php echo e($quotation->notes); ?></div>
+    {{-- Payment instructions --}}
+    <div class="doc-payment">
+        <div class="payment-label">Payment Instructions</div>
+        <div class="payment-grid">
+            <div><strong>Bank:</strong> KCB Bank Kenya Limited</div>
+            <div><strong>Account Name:</strong> Rilip Traders Limited</div>
+            <div><strong>Account No.:</strong> 1234567890</div>
+            <div><strong>Branch:</strong> Nairobi CBD</div>
+            <div><strong>Swift Code:</strong> KCBLKENX</div>
+        </div>
     </div>
-    <?php endif; ?>
 
-    
+    {{-- Terms --}}
+    <div class="doc-terms">
+        <div class="terms-label">Terms &amp; Conditions</div>
+        <div class="terms-body">
+            Payment is due within 14 days. Late payments attract a 2% monthly interest charge.
+            Goods remain the property of Rilip Traders Limited until full payment is received.
+        </div>
+    </div>
+
+    {{-- Signature --}}
+    <div class="doc-signature">
+        <div class="signature-block">
+            <div style="height:40px;"></div>
+            <div class="signature-line">Authorised Signature</div>
+        </div>
+    </div>
+
+    {{-- Footer --}}
     <div class="doc-footer">
         <div class="footer-cell">
             <span class="footer-icon">&#9990;</span>
@@ -449,4 +567,3 @@
 
 </body>
 </html>
-<?php /**PATH /opt/homebrew/var/www/farm_app/resources/views/quotations/print.blade.php ENDPATH**/ ?>

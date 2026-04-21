@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quotation <?php echo e($quotation->code); ?> – Rilip Traders Limited</title>
+    <title>Quotation {{ $quotation->code }} – Rilip Traders Limited</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -308,10 +308,10 @@
 
 <div class="document">
 
-    
+    {{-- Header --}}
     <div class="doc-header">
         <div class="header-left">
-            <img src="<?php echo e(asset('images/rtl-logo.png')); ?>" alt="Rilip Traders Limited" class="header-logo">
+            <img src="{{ asset('images/rtl-logo.png') }}" alt="Rilip Traders Limited" class="header-logo">
             <div class="header-company">
                 <p><strong>Rilip Traders Limited</strong></p>
                 <p>123 Commerce Street, Industrial Area</p>
@@ -326,27 +326,27 @@
         </div>
     </div>
 
-    
+    {{-- Meta bar --}}
     <div class="doc-meta">
         <div class="meta-cell">
             <div class="meta-label">Quotation No.</div>
-            <div class="meta-value"><?php echo e($quotation->code); ?></div>
+            <div class="meta-value">{{ $quotation->code }}</div>
         </div>
         <div class="meta-cell">
             <div class="meta-label">Quotation Date</div>
-            <div class="meta-value"><?php echo e($quotation->date->format('d M Y')); ?></div>
+            <div class="meta-value">{{ $quotation->date->format('d M Y') }}</div>
         </div>
         <div class="meta-cell">
             <div class="meta-label">Valid Until</div>
-            <div class="meta-value"><?php echo e($quotation->valid_until ? $quotation->valid_until->format('d M Y') : '—'); ?></div>
+            <div class="meta-value">{{ $quotation->valid_until ? $quotation->valid_until->format('d M Y') : '—' }}</div>
         </div>
         <div class="meta-cell">
             <div class="meta-label">Prepared By</div>
-            <div class="meta-value"><?php echo e($quotation->creator?->name ?? '—'); ?></div>
+            <div class="meta-value">{{ $quotation->creator?->name ?? '—' }}</div>
         </div>
     </div>
 
-    
+    {{-- Address block --}}
     <div class="doc-addresses">
         <div>
             <div class="address-label">From</div>
@@ -361,23 +361,22 @@
         </div>
         <div>
             <div class="address-label">Prepared For</div>
-            <div class="address-name"><?php echo e($quotation->customer->name); ?></div>
+            <div class="address-name">{{ $quotation->customer->name }}</div>
             <div class="address-body">
-                <?php if($quotation->customer->address): ?>
-                    <?php echo e($quotation->customer->address); ?><br>
-                <?php endif; ?>
-                <?php if($quotation->customer->email): ?>
-                    <?php echo e($quotation->customer->email); ?><br>
-                <?php endif; ?>
-                <?php if($quotation->customer->phone): ?>
-                    <?php echo e($quotation->customer->phone); ?>
-
-                <?php endif; ?>
+                @if($quotation->customer->address)
+                    {{ $quotation->customer->address }}<br>
+                @endif
+                @if($quotation->customer->email)
+                    {{ $quotation->customer->email }}<br>
+                @endif
+                @if($quotation->customer->phone)
+                    {{ $quotation->customer->phone }}
+                @endif
             </div>
         </div>
     </div>
 
-    
+    {{-- Items table --}}
     <div class="doc-table-wrap">
         <table class="doc-table">
             <thead>
@@ -390,43 +389,43 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $__currentLoopData = $quotation->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                @foreach($quotation->items as $item)
                 <tr>
                     <td>
-                        <div class="item-name"><?php echo e($item->name); ?></div>
-                        <?php if($item->description): ?>
-                            <div class="item-desc"><?php echo e($item->description); ?></div>
-                        <?php endif; ?>
+                        <div class="item-name">{{ $item->name }}</div>
+                        @if($item->description)
+                            <div class="item-desc">{{ $item->description }}</div>
+                        @endif
                     </td>
-                    <td class="text-right"><?php echo e(number_format($item->quantity, 2)); ?></td>
-                    <td class="text-right"><?php echo e($item->unitOfMeasure?->code ?? '—'); ?></td>
-                    <td class="text-right"><?php echo e(number_format($item->unit_price, 2)); ?></td>
-                    <td class="text-right"><?php echo e(number_format($item->total, 2)); ?></td>
+                    <td class="text-right">{{ number_format($item->quantity, 2) }}</td>
+                    <td class="text-right">{{ $item->unitOfMeasure?->code ?? '—' }}</td>
+                    <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
+                    <td class="text-right">{{ number_format($item->total, 2) }}</td>
                 </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                @endforeach
             </tbody>
         </table>
     </div>
 
-    
+    {{-- Totals --}}
     <div class="doc-totals">
         <table class="totals-table">
             <tr class="total-row">
                 <td class="label" style="color:rgba(255,255,255,0.8)">TOTAL DUE</td>
-                <td class="amount">KSh <?php echo e(number_format($quotation->total, 2)); ?></td>
+                <td class="amount">KSh {{ number_format($quotation->total, 2) }}</td>
             </tr>
         </table>
     </div>
 
-    
-    <?php if($quotation->notes): ?>
+    {{-- Notes --}}
+    @if($quotation->notes)
     <div class="doc-notes">
         <div class="notes-label">Notes &amp; Terms</div>
-        <div class="notes-body"><?php echo e($quotation->notes); ?></div>
+        <div class="notes-body">{{ $quotation->notes }}</div>
     </div>
-    <?php endif; ?>
+    @endif
 
-    
+    {{-- Footer --}}
     <div class="doc-footer">
         <div class="footer-cell">
             <span class="footer-icon">&#9990;</span>
@@ -449,4 +448,3 @@
 
 </body>
 </html>
-<?php /**PATH /opt/homebrew/var/www/farm_app/resources/views/quotations/print.blade.php ENDPATH**/ ?>

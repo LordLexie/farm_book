@@ -1,0 +1,5 @@
+code,name,start_time,end_time,type
+MORNING,Morning,06:00:00,08:00:00,milking
+MID_MORNING,Mid Morning,10:00:00,11:00:00,feeding
+EVENING,Evening,16:00:00,18:00:00,milking
+LATE_EVENING,Late Evening,19:00:00,20:00:00,feeding
