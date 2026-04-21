@@ -97,7 +97,7 @@
             background: #145449;
             color: #fff;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
         }
 
         .meta-cell {
@@ -255,76 +255,6 @@
             font-size: 12px;
         }
 
-        /* ── Payment instructions ── */
-        .doc-payment {
-            margin: 8px 32px 0;
-            padding: 14px 16px;
-            background: #f5faf8;
-            border-left: 3px solid #1b6b5a;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .payment-label {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #1b6b5a;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .payment-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 24px;
-            font-size: 12px;
-            color: #444;
-            line-height: 1.7;
-        }
-
-        /* ── Terms ── */
-        .doc-terms {
-            margin: 8px 32px 24px;
-            padding: 14px 16px;
-            background: #fff8f0;
-            border-left: 3px solid #e0a020;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .terms-label {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #b07010;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .terms-body {
-            font-size: 12px;
-            line-height: 1.6;
-            color: #555;
-        }
-
-        /* ── Signature ── */
-        .doc-signature {
-            margin: 0 32px 24px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .signature-block {
-            text-align: center;
-            width: 200px;
-        }
-
-        .signature-line {
-            border-top: 1px solid #999;
-            padding-top: 6px;
-            font-size: 11px;
-            color: #666;
-        }
-
         /* ── Footer ── */
         .doc-footer {
             margin-top: auto;
@@ -378,9 +308,9 @@
             <img src="{{ asset('images/rtl-logo.png') }}" alt="Rilip Traders Limited" class="header-logo">
             <div class="header-company">
                 <p><strong>Rilip Traders Limited</strong></p>
-                <p>123 Commerce Street, Industrial Area</p>
-                <p>Nairobi, Kenya &nbsp;|&nbsp; P.O. Box 00100</p>
-                <p>+254 700 000 000</p>
+                <p>P.O Box 31406-00600</p>
+                <p>Nairobi, Kenya</p>
+                <p>+254768858398 &nbsp;|&nbsp; +254713622269</p>
                 <p>info@riliptraders.co.ke</p>
             </div>
         </div>
@@ -408,10 +338,6 @@
             <div class="meta-label">Currency</div>
             <div class="meta-value">{{ $invoice->currency?->code ?? 'KSH' }}</div>
         </div>
-        <div class="meta-cell">
-            <div class="meta-label">VAT Reg. No.</div>
-            <div class="meta-value">P051234567W</div>
-        </div>
     </div>
 
     {{-- Address block --}}
@@ -420,10 +346,9 @@
             <div class="address-label">From</div>
             <div class="address-name">Rilip Traders Limited</div>
             <div class="address-body">
-                123 Commerce Street, Industrial Area<br>
+                P.O Box 31406-00600<br>
                 Nairobi, Kenya<br>
-                P.O. Box 00100<br>
-                +254 700 000 000<br>
+                +254768858398 | +254713622269<br>
                 info@riliptraders.co.ke
             </div>
         </div>
@@ -524,40 +449,15 @@
         </table>
     </div>
 
-    {{-- Payment instructions --}}
-    <div class="doc-payment">
-        <div class="payment-label">Payment Instructions</div>
-        <div class="payment-grid">
-            <div><strong>Bank:</strong> KCB Bank Kenya Limited</div>
-            <div><strong>Account Name:</strong> Rilip Traders Limited</div>
-            <div><strong>Account No.:</strong> 1234567890</div>
-            <div><strong>Branch:</strong> Nairobi CBD</div>
-            <div><strong>Swift Code:</strong> KCBLKENX</div>
-        </div>
-    </div>
-
-    {{-- Terms --}}
-    <div class="doc-terms">
-        <div class="terms-label">Terms &amp; Conditions</div>
-        <div class="terms-body">
-            Payment is due within 14 days. Late payments attract a 2% monthly interest charge.
-            Goods remain the property of Rilip Traders Limited until full payment is received.
-        </div>
-    </div>
-
-    {{-- Signature --}}
-    <div class="doc-signature">
-        <div class="signature-block">
-            <div style="height:40px;"></div>
-            <div class="signature-line">Authorised Signature</div>
-        </div>
-    </div>
-
     {{-- Footer --}}
     <div class="doc-footer">
         <div class="footer-cell">
             <span class="footer-icon">&#9990;</span>
-            +254 700 000 000
+            +254768858398
+        </div>
+        <div class="footer-cell">
+            <span class="footer-icon">&#9990;</span>
+            +254713622269
         </div>
         <div class="footer-cell">
             <span class="footer-icon">&#9993;</span>
@@ -566,9 +466,6 @@
         <div class="footer-cell">
             <span class="footer-icon">&#127760;</span>
             www.riliptraders.co.ke
-        </div>
-        <div class="footer-cell" style="justify-content:flex-end;font-size:10px;opacity:0.7">
-            VAT Reg. No. P051234567W
         </div>
     </div>
 

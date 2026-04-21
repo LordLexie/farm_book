@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\MilkProductionController;
 use App\Http\Controllers\Api\V1\MilkSaleController;
 use App\Http\Controllers\Api\V1\MilkRateController;
 use App\Http\Controllers\Api\V1\InvoiceController;
+use App\Http\Controllers\Api\V1\ProFormaInvoiceController;
 use App\Http\Controllers\Api\V1\BillController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\PurchaseController;
@@ -57,6 +58,11 @@ Route::prefix('v1')->group(function () {
         Route::get('invoices/{invoice}/print-url', [InvoiceController::class, 'printUrl']);
         Route::apiResource('invoices', InvoiceController::class);
 
+        // Pro Forma Invoices with convert + print URL
+        Route::post('pro-forma-invoices/{id}/convert', [ProFormaInvoiceController::class, 'convert']);
+        Route::get('pro-forma-invoices/{id}/print-url', [ProFormaInvoiceController::class, 'printUrl']);
+        Route::apiResource('pro-forma-invoices', ProFormaInvoiceController::class);
+
         // Quotations with print URL
         Route::get('quotations/{quotation}/print-url', [QuotationController::class, 'printUrl']);
         Route::apiResource('quotations', QuotationController::class);
@@ -88,7 +94,7 @@ Route::prefix('v1')->group(function () {
         // Lookup: unit-of-measures
         Route::get('unit-of-measures', [LookupController::class, 'unitOfMeasures']);
 
-        // Analytics
+        // AnalyticspP
         Route::prefix('analytics')->group(function () {
             Route::get('summary', [AnalyticsController::class, 'summary']);
             Route::get('milk-production-summary', [AnalyticsController::class, 'milkProductionSummary']);

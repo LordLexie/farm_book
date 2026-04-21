@@ -314,9 +314,9 @@
             <img src="{{ asset('images/rtl-logo.png') }}" alt="Rilip Traders Limited" class="header-logo">
             <div class="header-company">
                 <p><strong>Rilip Traders Limited</strong></p>
-                <p>123 Commerce Street, Industrial Area</p>
-                <p>Nairobi, Kenya &nbsp;|&nbsp; P.O. Box 00100</p>
-                <p>+254 700 000 000</p>
+                <p>P.O Box 31406-00600</p>
+                <p>Nairobi, Kenya</p>
+                <p>+254768858398 &nbsp;|&nbsp; +254713622269</p>
                 <p>info@riliptraders.co.ke</p>
             </div>
         </div>
@@ -352,10 +352,9 @@
             <div class="address-label">From</div>
             <div class="address-name">Rilip Traders Limited</div>
             <div class="address-body">
-                123 Commerce Street, Industrial Area<br>
+                P.O Box 31406-00600<br>
                 Nairobi, Kenya<br>
-                P.O. Box 00100<br>
-                +254 700 000 000<br>
+                +254768858398 | +254713622269<br>
                 info@riliptraders.co.ke
             </div>
         </div>
@@ -429,7 +428,11 @@
     <div class="doc-footer">
         <div class="footer-cell">
             <span class="footer-icon">&#9990;</span>
-            +254 700 000 000
+            +254768858398
+        </div>
+        <div class="footer-cell">
+            <span class="footer-icon">&#9990;</span>
+            +254713622269
         </div>
         <div class="footer-cell">
             <span class="footer-icon">&#9993;</span>
@@ -438,9 +441,6 @@
         <div class="footer-cell">
             <span class="footer-icon">&#127760;</span>
             www.riliptraders.co.ke
-        </div>
-        <div class="footer-cell" style="justify-content:flex-end;font-size:10px;opacity:0.7">
-            VAT Reg. No. P051234567W
         </div>
     </div>
 

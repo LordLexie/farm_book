@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice <?php echo e($invoice->code); ?> – Rilip Traders Limited</title>
+    <title>Pro Forma <?php echo e($proFormaInvoice->code); ?> – Rilip Traders Limited</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -42,7 +42,6 @@
             flex-direction: column;
         }
 
-        /* ── Header ── */
         .doc-header {
             background: #1b6b5a;
             color: #fff;
@@ -78,7 +77,7 @@
         }
 
         .header-right .doc-type {
-            font-size: 38px;
+            font-size: 28px;
             font-weight: 700;
             letter-spacing: 1px;
             line-height: 1.1;
@@ -92,7 +91,6 @@
             margin-top: 2px;
         }
 
-        /* ── Meta bar ── */
         .doc-meta {
             background: #145449;
             color: #fff;
@@ -120,7 +118,6 @@
             font-weight: 600;
         }
 
-        /* ── Address block ── */
         .doc-addresses {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -152,7 +149,6 @@
             color: #444;
         }
 
-        /* ── Items table ── */
         .doc-table-wrap {
             padding: 0 32px;
             margin-top: 8px;
@@ -202,7 +198,6 @@
             margin-top: 2px;
         }
 
-        /* ── Totals ── */
         .doc-totals {
             padding: 16px 32px 8px;
             display: flex;
@@ -229,11 +224,6 @@
             min-width: 110px;
         }
 
-        .totals-table tr.divider td {
-            border-top: 1px solid #e0e0e0;
-            padding-top: 8px;
-        }
-
         .totals-table tr.total-row td {
             background: #1b6b5a;
             color: #fff;
@@ -242,20 +232,29 @@
             padding: 10px 12px;
         }
 
-        .totals-table tr.balance-row td {
-            background: #145449;
-            color: #fff;
-            font-size: 13px;
+        .doc-notice {
+            margin: 8px 32px 0;
+            padding: 14px 16px;
+            background: #fff8f0;
+            border-left: 3px solid #e0a020;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .notice-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #b07010;
             font-weight: 700;
-            padding: 8px 12px;
+            margin-bottom: 6px;
         }
 
-        .totals-table tr.paid-row td {
-            color: #1b6b5a;
+        .notice-body {
             font-size: 12px;
+            line-height: 1.6;
+            color: #555;
         }
 
-        /* ── Footer ── */
         .doc-footer {
             margin-top: auto;
             background: #1b6b5a;
@@ -315,28 +314,28 @@
             </div>
         </div>
         <div class="header-right">
-            <div class="doc-type">INVOICE</div>
-            <div class="doc-subtype">Tax Invoice</div>
+            <div class="doc-type">PRO FORMA</div>
+            <div class="doc-subtype">Invoice</div>
         </div>
     </div>
 
     
     <div class="doc-meta">
         <div class="meta-cell">
-            <div class="meta-label">Invoice No.</div>
-            <div class="meta-value"><?php echo e($invoice->code); ?></div>
+            <div class="meta-label">Pro Forma No.</div>
+            <div class="meta-value"><?php echo e($proFormaInvoice->code); ?></div>
         </div>
         <div class="meta-cell">
-            <div class="meta-label">Invoice Date</div>
-            <div class="meta-value"><?php echo e($invoice->date->format('d M Y')); ?></div>
-        </div>
-        <div class="meta-cell">
-            <div class="meta-label">Due Date</div>
-            <div class="meta-value"><?php echo e($invoice->date->addDays(14)->format('d M Y')); ?></div>
+            <div class="meta-label">Date</div>
+            <div class="meta-value"><?php echo e($proFormaInvoice->date->format('d M Y')); ?></div>
         </div>
         <div class="meta-cell">
             <div class="meta-label">Currency</div>
-            <div class="meta-value"><?php echo e($invoice->currency?->code ?? 'KSH'); ?></div>
+            <div class="meta-value"><?php echo e($proFormaInvoice->currency?->code ?? 'KSH'); ?></div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Status</div>
+            <div class="meta-value"><?php echo e($proFormaInvoice->status?->name ?? '—'); ?></div>
         </div>
     </div>
 
@@ -353,17 +352,17 @@
             </div>
         </div>
         <div>
-            <div class="address-label">Bill To</div>
-            <div class="address-name"><?php echo e($invoice->customer->name); ?></div>
+            <div class="address-label">Prepared For</div>
+            <div class="address-name"><?php echo e($proFormaInvoice->customer->name); ?></div>
             <div class="address-body">
-                <?php if($invoice->customer->address): ?>
-                    <?php echo e($invoice->customer->address); ?><br>
+                <?php if($proFormaInvoice->customer->address): ?>
+                    <?php echo e($proFormaInvoice->customer->address); ?><br>
                 <?php endif; ?>
-                <?php if($invoice->customer->email): ?>
-                    <?php echo e($invoice->customer->email); ?><br>
+                <?php if($proFormaInvoice->customer->email): ?>
+                    <?php echo e($proFormaInvoice->customer->email); ?><br>
                 <?php endif; ?>
-                <?php if($invoice->customer->phone): ?>
-                    <?php echo e($invoice->customer->phone); ?>
+                <?php if($proFormaInvoice->customer->phone): ?>
+                    <?php echo e($proFormaInvoice->customer->phone); ?>
 
                 <?php endif; ?>
             </div>
@@ -378,12 +377,12 @@
                     <th style="width:42%">Description</th>
                     <th class="text-right" style="width:10%">Qty</th>
                     <th style="width:10%">Unit</th>
-                    <th class="text-right" style="width:18%">Unit Price (<?php echo e($invoice->currency?->code ?? 'KSH'); ?>)</th>
-                    <th class="text-right" style="width:20%">Amount (<?php echo e($invoice->currency?->code ?? 'KSH'); ?>)</th>
+                    <th class="text-right" style="width:18%">Unit Price (<?php echo e($proFormaInvoice->currency?->code ?? 'KSH'); ?>)</th>
+                    <th class="text-right" style="width:20%">Amount (<?php echo e($proFormaInvoice->currency?->code ?? 'KSH'); ?>)</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $__currentLoopData = $invoice->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $__currentLoopData = $proFormaInvoice->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php
                     $name = $item->invoiceable?->name
                         ?? $item->invoiceable?->description
@@ -408,12 +407,12 @@
 
     
     <?php
-        $currency     = $invoice->currency?->code ?? 'KSh';
-        $subtotal     = $invoice->items->sum('total');
-        $discount     = (float) $invoice->discount;
+        $currency      = $proFormaInvoice->currency?->code ?? 'KSh';
+        $subtotal      = $proFormaInvoice->items->sum('total');
+        $discount      = (float) $proFormaInvoice->discount;
         $afterDiscount = round($subtotal * (1 - $discount / 100), 2);
-        $taxRate      = $invoice->tax ? (float) $invoice->tax->value : 0;
-        $taxAmount    = round($afterDiscount * $taxRate / 100, 2);
+        $taxRate       = $proFormaInvoice->tax ? (float) $proFormaInvoice->tax->value : 0;
+        $taxAmount     = round($afterDiscount * $taxRate / 100, 2);
     ?>
     <div class="doc-totals">
         <table class="totals-table">
@@ -429,25 +428,24 @@
             <?php endif; ?>
             <?php if($taxAmount > 0): ?>
             <tr>
-                <td class="label"><?php echo e($invoice->tax->name); ?> (<?php echo e($invoice->tax->value); ?>%)</td>
+                <td class="label"><?php echo e($proFormaInvoice->tax->name); ?> (<?php echo e($proFormaInvoice->tax->value); ?>%)</td>
                 <td class="amount">+ <?php echo e($currency); ?> <?php echo e(number_format($taxAmount, 2)); ?></td>
             </tr>
             <?php endif; ?>
             <tr class="total-row">
-                <td class="label" style="color:rgba(255,255,255,0.8)">Total Due</td>
-                <td class="amount"><?php echo e($currency); ?> <?php echo e(number_format($invoice->total, 2)); ?></td>
+                <td class="label" style="color:rgba(255,255,255,0.8)">Total</td>
+                <td class="amount"><?php echo e($currency); ?> <?php echo e(number_format($proFormaInvoice->total, 2)); ?></td>
             </tr>
-            <?php if((float)$invoice->amount_paid > 0): ?>
-            <tr class="paid-row">
-                <td class="label">Amount Paid</td>
-                <td class="amount">– <?php echo e($currency); ?> <?php echo e(number_format($invoice->amount_paid, 2)); ?></td>
-            </tr>
-            <tr class="balance-row">
-                <td class="label" style="color:rgba(255,255,255,0.8)">Balance Due</td>
-                <td class="amount"><?php echo e($currency); ?> <?php echo e(number_format($invoice->balance, 2)); ?></td>
-            </tr>
-            <?php endif; ?>
         </table>
+    </div>
+
+    
+    <div class="doc-notice">
+        <div class="notice-label">Important Notice</div>
+        <div class="notice-body">
+            This is a pro forma invoice and is not a demand for payment. Goods and services will be delivered upon confirmation of order.
+            This document is valid for 30 days from the date of issue.
+        </div>
     </div>
 
     
@@ -474,4 +472,4 @@
 
 </body>
 </html>
-<?php /**PATH /opt/homebrew/var/www/farm_app/resources/views/invoices/print.blade.php ENDPATH**/ ?>
+<?php /**PATH /opt/homebrew/var/www/farm_app/resources/views/pro-forma-invoices/print.blade.php ENDPATH**/ ?>

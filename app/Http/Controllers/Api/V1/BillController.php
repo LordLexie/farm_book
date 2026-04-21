@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Bill;
 use App\Models\BillItem;
+use App\Models\Service;
 use App\Models\Status;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BillController extends Controller
 {
@@ -37,36 +39,52 @@ class BillController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $code   = 'BIL-' . str_pad(Bill::count() + 1, 4, '0', STR_PAD_LEFT);
-        $active = Status::where('code', 'ACT')->value('id');
-
-        $bill = Bill::create([
-            'code'        => $code,
-            'supplier_id' => $request->input('supplier_id'),
-            'status_id'   => $request->input('status_id', $active),
-            'currency_id' => $request->input('currency_id'),
-            'date'        => $request->input('date'),
-            'notes'       => $request->input('notes'),
-            'created_by'  => $request->user()?->id,
-            'total'       => 0,
+        $request->validate([
+            'supplier_id'          => 'required|integer|exists:suppliers,id',
+            'currency_id'          => 'required|integer|exists:currencies,id',
+            'date'                 => 'required|date',
+            'items'                => 'required|array|min:1',
+            'items.*.service_id'   => 'required|integer|exists:services,id',
+            'items.*.quantity'     => 'required|numeric|min:0',
+            'items.*.unit_price'   => 'required|numeric|min:0',
         ]);
 
-        $total = 0;
-        foreach ($request->input('items', []) as $row) {
-            $lineTotal = round($row['quantity'] * $row['unit_price'], 2);
-            $total    += $lineTotal;
-            BillItem::create([
-                'bill_id'            => $bill->id,
-                'service_id'         => $row['service_id'],
-                'unit_of_measure_id' => $row['unit_of_measure_id'],
-                'quantity'           => $row['quantity'],
-                'unit_price'         => $row['unit_price'],
-                'total'              => $lineTotal,
-                'notes'              => $row['notes'] ?? null,
-            ]);
-        }
+        $active = Status::where('code', 'ACT')->value('id');
 
-        $bill->update(['total' => round($total, 2)]);
+        $bill = DB::transaction(function () use ($request, $active) {
+            $code = 'BIL-' . str_pad(Bill::count() + 1, 4, '0', STR_PAD_LEFT);
+
+            $bill = Bill::create([
+                'code'        => $code,
+                'supplier_id' => $request->input('supplier_id'),
+                'status_id'   => $request->input('status_id', $active),
+                'currency_id' => $request->input('currency_id'),
+                'date'        => $request->input('date'),
+                'notes'       => $request->input('notes'),
+                'created_by'  => $request->user()?->id,
+                'total'       => 0,
+            ]);
+
+            $total = 0;
+            foreach ($request->input('items') as $row) {
+                $uomId     = $row['unit_of_measure_id'] ?: Service::find($row['service_id'])?->unit_of_measure_id;
+                $lineTotal = round($row['quantity'] * $row['unit_price'], 2);
+                $total    += $lineTotal;
+                BillItem::create([
+                    'bill_id'            => $bill->id,
+                    'service_id'         => $row['service_id'],
+                    'unit_of_measure_id' => $uomId,
+                    'quantity'           => $row['quantity'],
+                    'unit_price'         => $row['unit_price'],
+                    'total'              => $lineTotal,
+                    'notes'              => $row['notes'] ?? null,
+                ]);
+            }
+
+            $bill->update(['total' => round($total, 2)]);
+            return $bill;
+        });
+
         return response()->json(['bill' => $bill->load($this->relations())], 201);
     }
 
