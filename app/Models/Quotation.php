@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Quotation extends Model
 {
     protected $fillable = [
-        'code', 'customer_id', 'status_id', 'date',
-        'valid_until', 'total', 'notes', 'created_by',
+        'code', 'customer_id', 'status_id', 'currency_id', 'tax_id', 'discount',
+        'date', 'valid_until', 'total', 'notes', 'created_by',
     ];
 
     protected $casts = ['date' => 'date', 'valid_until' => 'date'];
@@ -23,6 +23,16 @@ class Quotation extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Currency::class);
+    }
+
+    public function tax(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Tax::class);
     }
 
     public function creator(): BelongsTo

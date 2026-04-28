@@ -9,7 +9,7 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 13px;
+            font-size: 14px;
             color: #1a1a1a;
             background: #e8e8e8;
         }
@@ -67,7 +67,7 @@
         }
 
         .header-company p {
-            font-size: 12px;
+            font-size: 14px;
             line-height: 1.6;
             opacity: 0.88;
         }
@@ -77,14 +77,14 @@
         }
 
         .header-right .doc-type {
-            font-size: 28px;
+            font-size: 38px;
             font-weight: 700;
             letter-spacing: 1px;
             line-height: 1.1;
         }
 
         .header-right .doc-subtype {
-            font-size: 13px;
+            font-size: 15px;
             opacity: 0.8;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -106,7 +106,7 @@
         .meta-cell:last-child { border-right: none; }
 
         .meta-label {
-            font-size: 9px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
             opacity: 0.7;
@@ -114,7 +114,7 @@
         }
 
         .meta-value {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 600;
         }
 
@@ -127,7 +127,7 @@
         }
 
         .address-label {
-            font-size: 9px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #1b6b5a;
@@ -137,14 +137,14 @@
         }
 
         .address-name {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 700;
             color: #1b6b5a;
             margin-bottom: 6px;
         }
 
         .address-body {
-            font-size: 12px;
+            font-size: 14px;
             line-height: 1.7;
             color: #444;
         }
@@ -166,7 +166,7 @@
 
         .doc-table thead th {
             padding: 10px 12px;
-            font-size: 10px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             font-weight: 600;
@@ -193,7 +193,7 @@
         }
 
         .item-desc {
-            font-size: 11px;
+            font-size: 13px;
             color: #777;
             margin-top: 2px;
         }
@@ -210,7 +210,7 @@
 
         .totals-table td {
             padding: 5px 8px;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .totals-table td.label {
@@ -227,7 +227,7 @@
         .totals-table tr.total-row td {
             background: #1b6b5a;
             color: #fff;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             padding: 10px 12px;
         }
@@ -241,7 +241,7 @@
         }
 
         .notice-label {
-            font-size: 9px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #b07010;
@@ -250,7 +250,7 @@
         }
 
         .notice-body {
-            font-size: 12px;
+            font-size: 14px;
             line-height: 1.6;
             color: #555;
         }

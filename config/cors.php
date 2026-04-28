@@ -6,7 +6,7 @@ return [
     'allowed_origins'          => ['http://localhost:4200', 'https://riliptraders.co.ke'],
     'allowed_origins_patterns' => [],
     'allowed_headers'          => ['*'],
-    'exposed_headers'          => [],
+    'exposed_headers'          => ['Content-Disposition'],
     'max_age'                  => 0,
     'supports_credentials'     => true,
 ];
