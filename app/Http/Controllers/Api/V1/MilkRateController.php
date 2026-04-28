@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\MilkRate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -10,31 +11,45 @@ class MilkRateController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(['milk_rates' => [], 'meta' => $this->emptyMeta()]);
+        $rates = MilkRate::with('ratePlan')->orderBy('id')->get();
+
+        return response()->json(['milk_rates' => $rates]);
     }
 
     public function store(Request $request): JsonResponse
     {
-        return response()->json(['milk_rate' => []], 201);
+        $data = $request->validate([
+            'rate_plan_id' => 'required|integer|exists:rate_plans,id',
+            'price'        => 'required|numeric|min:0',
+        ]);
+
+        $rate = MilkRate::create($data);
+
+        return response()->json(['milk_rate' => $rate->load('ratePlan')], 201);
     }
 
     public function show(int $id): JsonResponse
     {
-        return response()->json(['milk_rate' => []]);
+        return response()->json(['milk_rate' => MilkRate::with('ratePlan')->findOrFail($id)]);
     }
 
     public function update(Request $request, int $id): JsonResponse
     {
-        return response()->json(['message' => 'Milk rate updated.', 'milk_rate' => []]);
+        $rate = MilkRate::findOrFail($id);
+
+        $data = $request->validate([
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $rate->update($data);
+
+        return response()->json(['message' => 'Milk rate updated.', 'milk_rate' => $rate->load('ratePlan')]);
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return response()->json(['message' => 'Milk rate deleted.']);
-    }
+        MilkRate::findOrFail($id)->delete();
 
-    private function emptyMeta(): array
-    {
-        return ['current_page' => 1, 'last_page' => 1, 'per_page' => 15, 'total' => 0];
+        return response()->json(['message' => 'Milk rate deleted.']);
     }
 }

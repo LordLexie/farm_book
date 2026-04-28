@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\LookupController;
 use App\Http\Controllers\Api\V1\AnalyticsController;
 use App\Http\Controllers\Api\V1\DocumentController;
+use App\Http\Controllers\Api\V1\LoginLogController;
 
 Route::prefix('v1')->group(function () {
 
@@ -88,6 +89,9 @@ Route::prefix('v1')->group(function () {
         Route::get('item-categories', [LookupController::class, 'itemCategories']);
         Route::get('farm-sessions', [LookupController::class, 'farmSessions']);
         Route::get('taxes', [LookupController::class, 'taxes']);
+
+        // Login logs
+        Route::get('login-logs', [LoginLogController::class, 'index']);
 
         // Documents
         Route::get('documents', [DocumentController::class, 'index']);

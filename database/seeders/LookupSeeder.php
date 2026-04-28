@@ -24,9 +24,8 @@ class LookupSeeder extends Seeder
         ]);
 
         DB::table('rate_plans')->insertOrIgnore([
-            ['code' => 'STANDARD',  'name' => 'Standard',  'created_at' => now(), 'updated_at' => now()],
-            ['code' => 'PREMIUM',   'name' => 'Premium',   'created_at' => now(), 'updated_at' => now()],
             ['code' => 'WHOLESALE', 'name' => 'Wholesale', 'created_at' => now(), 'updated_at' => now()],
+            ['code' => 'RETAIL',    'name' => 'Retail',    'created_at' => now(), 'updated_at' => now()],
         ]);
 
         DB::table('service_types')->insertOrIgnore([

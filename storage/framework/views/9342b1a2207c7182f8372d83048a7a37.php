@@ -381,9 +381,10 @@
         <table class="doc-table">
             <thead>
                 <tr>
-                    <th style="width:40%">Description</th>
+                    <th style="width:5%">#</th>
+                    <th style="width:37%">Description</th>
                     <th class="text-right" style="width:10%">Qty</th>
-                    <th class="text-right" style="width:10%">Unit</th>
+                    <th class="text-right" style="width:8%">Unit</th>
                     <th class="text-right" style="width:18%">Unit Price (KSH)</th>
                     <th class="text-right" style="width:22%">Amount (KSH)</th>
                 </tr>
@@ -391,6 +392,7 @@
             <tbody>
                 <?php $__currentLoopData = $quotation->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
+                    <td class="text-right" style="color:#888;font-size:12px"><?php echo e($loop->iteration); ?></td>
                     <td>
                         <div class="item-name"><?php echo e($item->name); ?></div>
                         <?php if($item->description): ?>

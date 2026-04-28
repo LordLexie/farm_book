@@ -11,6 +11,7 @@ use App\Models\PaymentMode;
 use App\Models\Gender;
 use App\Models\ItemCategory;
 use App\Models\LivestockType;
+use App\Models\RatePlan;
 use App\Models\ServiceType;
 use App\Models\Status;
 use App\Models\UnitOfMeasure;
@@ -63,7 +64,7 @@ class LookupController extends Controller
 
     public function ratePlans(): JsonResponse
     {
-        return response()->json(['rate_plans' => [], 'meta' => $this->emptyMeta()]);
+        return response()->json(['rate_plans' => RatePlan::orderBy('name')->get()]);
     }
 
     public function serviceTypes(Request $request): JsonResponse

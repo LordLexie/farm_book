@@ -374,11 +374,12 @@
         <table class="doc-table">
             <thead>
                 <tr>
-                    <th style="width:42%">Description</th>
-                    <th class="text-right" style="width:10%">Qty</th>
-                    <th style="width:10%">Unit</th>
+                    <th style="width:5%">#</th>
+                    <th style="width:39%">Description</th>
+                    <th class="text-right" style="width:8%">Qty</th>
+                    <th style="width:8%">Unit</th>
                     <th class="text-right" style="width:18%">Unit Price ({{ $invoice->currency?->code ?? 'KSH' }})</th>
-                    <th class="text-right" style="width:20%">Amount ({{ $invoice->currency?->code ?? 'KSH' }})</th>
+                    <th class="text-right" style="width:22%">Amount ({{ $invoice->currency?->code ?? 'KSH' }})</th>
                 </tr>
             </thead>
             <tbody>
@@ -389,6 +390,7 @@
                         ?? class_basename($item->invoiceable_type ?? 'Item');
                 @endphp
                 <tr>
+                    <td class="text-right" style="color:#888;font-size:12px">{{ $loop->iteration }}</td>
                     <td>
                         <div class="item-name">{{ $name }}</div>
                         @if($item->invoiceable && isset($item->invoiceable->description) && $item->invoiceable->description !== $name)
