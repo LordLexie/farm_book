@@ -270,7 +270,7 @@
             <img src="{{ asset('images/rtl-logo.png') }}" alt="Rilip Traders Limited" class="header-logo">
             <div class="header-company">
                 <p><strong>Rilip Traders Limited</strong></p>
-                <p>P.O Box 31406-00600</p>
+                <p>P.O Box 31404 - 00600</p>
                 <p>Nairobi, Kenya</p>
                 <p>+254768858398 &nbsp;|&nbsp; +254713622269</p>
                 <p>info@riliptraders.co.ke</p>
