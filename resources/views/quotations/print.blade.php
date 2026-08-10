@@ -341,7 +341,7 @@
         </div>
         <div class="meta-cell">
             <div class="meta-label">Prepared By</div>
-            <div class="meta-value">{{ $quotation->creator?->name ?? '—' }}</div>
+            <div class="meta-value">Admin</div>
         </div>
     </div>
 
