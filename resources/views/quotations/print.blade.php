@@ -341,7 +341,7 @@
         </div>
         <div class="meta-cell">
             <div class="meta-label">Prepared By</div>
-            <div class="meta-value">Admin</div>
+            <div class="meta-value">Mary </div>
         </div>
     </div>
 
@@ -354,7 +354,7 @@
                 P.O Box 31404 - 00600<br>
                 Nairobi, Kenya<br>
                 +254768858398 | +254713622269<br>
-                info@riliptraders.co.ke
+                info@riliptraders.co.ke.
             </div>
         </div>
         <div>
@@ -433,7 +433,7 @@
         </div>
         <div class="footer-cell">
             <span class="footer-icon">&#9990;</span>
-            +254713622269
+            +254 713622269
         </div>
         <div class="footer-cell">
             <span class="footer-icon">&#9993;</span>
