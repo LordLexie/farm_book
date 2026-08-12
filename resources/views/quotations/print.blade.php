@@ -408,8 +408,30 @@
     </div>
 
     {{-- Totals --}}
+    @php
+        $subtotal = $quotation->items->sum('total');
+        $discountAmount = $subtotal * ($quotation->discount / 100);
+        $afterDiscount = $subtotal - $discountAmount;
+        $taxAmount = $quotation->tax ? $afterDiscount * ($quotation->tax->value / 100) : 0;
+    @endphp
     <div class="doc-totals">
         <table class="totals-table">
+            <tr>
+                <td class="label">Subtotal</td>
+                <td class="amount">KSh {{ number_format($subtotal, 2) }}</td>
+            </tr>
+            @if($quotation->discount > 0)
+            <tr>
+                <td class="label">Discount ({{ number_format($quotation->discount, 2) }}%)</td>
+                <td class="amount">- KSh {{ number_format($discountAmount, 2) }}</td>
+            </tr>
+            @endif
+            @if($quotation->tax)
+            <tr>
+                <td class="label">{{ $quotation->tax->name }} ({{ number_format($quotation->tax->value, 2) }}%)</td>
+                <td class="amount">KSh {{ number_format($taxAmount, 2) }}</td>
+            </tr>
+            @endif
             <tr class="total-row">
                 <td class="label" style="color:rgba(255,255,255,0.8)">TOTAL DUE</td>
                 <td class="amount">KSh {{ number_format($quotation->total, 2) }}</td>
