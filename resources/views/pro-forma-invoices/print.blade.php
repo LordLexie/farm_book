@@ -427,7 +427,7 @@
                 <td class="amount">– {{ $currency }} {{ number_format($subtotal * $discount / 100, 2) }}</td>
             </tr>
             @endif
-            @if($taxAmount > 0)
+            @if($proFormaInvoice->tax)
             <tr>
                 <td class="label">{{ $proFormaInvoice->tax->name }} ({{ $proFormaInvoice->tax->value }}%)</td>
                 <td class="amount">+ {{ $currency }} {{ number_format($taxAmount, 2) }}</td>
