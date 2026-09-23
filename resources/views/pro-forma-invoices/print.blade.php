@@ -232,29 +232,6 @@
             padding: 10px 12px;
         }
 
-        .doc-notice {
-            margin: 8px 32px 0;
-            padding: 14px 16px;
-            background: #fff8f0;
-            border-left: 3px solid #e0a020;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .notice-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #b07010;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .notice-body {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #555;
-        }
-
         .doc-footer {
             margin-top: auto;
             background: #1b6b5a;
@@ -440,15 +417,6 @@
                 <td class="amount">{{ $currency }} {{ number_format($proFormaInvoice->total, 2) }}</td>
             </tr>
         </table>
-    </div>
-
-    {{-- Notice --}}
-    <div class="doc-notice">
-        <div class="notice-label">Important Notice</div>
-        <div class="notice-body">
-            This is a pro forma invoice and is not a demand for payment. Goods and services will be delivered upon confirmation of order.
-            This document is valid for 30 days from the date of issue.
-        </div>
     </div>
 
     {{-- Footer --}}

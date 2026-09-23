@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\Quotation;
 use App\Models\QuotationItem;
 use App\Models\Status;
 use App\Models\Tax;
+use App\Services\CreditService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -128,6 +132,58 @@ class QuotationController extends Controller
     {
         Quotation::findOrFail($id)->delete();
         return response()->json(['message' => 'Quotation deleted.']);
+    }
+
+    public function convert(int $id): JsonResponse
+    {
+        $quotation = Quotation::with(['items', 'tax'])->findOrFail($id);
+        $code      = 'INV-' . str_pad(Invoice::count() + 1, 4, '0', STR_PAD_LEFT);
+        $active    = Status::where('code', 'ACT')->value('id');
+
+        $invoice = Invoice::create([
+            'code'        => $code,
+            'customer_id' => $quotation->customer_id,
+            'status_id'   => $active,
+            'currency_id' => $quotation->currency_id ?? Currency::query()->value('id'),
+            'tax_id'      => $quotation->tax_id,
+            'date'        => $quotation->date->format('Y-m-d'),
+            'discount'    => $quotation->discount,
+            'total'       => 0,
+            'amount_paid' => 0,
+            'balance'     => 0,
+            'created_by'  => request()->user()?->id,
+        ]);
+
+        $taxRate  = $quotation->tax ? (float) $quotation->tax->value : 0;
+        $subtotal = 0;
+        foreach ($quotation->items as $item) {
+            $lineTotal = round($item->quantity * $item->unit_price, 2);
+            $subtotal += $lineTotal;
+            InvoiceItem::create([
+                'invoice_id'         => $invoice->id,
+                'name'               => $item->name,
+                'description'        => $item->description,
+                'unit_of_measure_id' => $item->unit_of_measure_id,
+                'quantity'           => $item->quantity,
+                'unit_price'         => $item->unit_price,
+                'total'              => $lineTotal,
+            ]);
+        }
+
+        $afterDiscount = round($subtotal * (1 - (float) $quotation->discount / 100), 2);
+        $total         = round($afterDiscount * (1 + $taxRate / 100), 2);
+
+        $customer = $invoice->customer;
+        ['applied' => $applied, 'balance' => $balance] = CreditService::apply($customer, $total);
+
+        $invoice->update(['total' => $total, 'amount_paid' => $applied, 'balance' => $balance]);
+
+        if ($balance > 0) {
+            $customer->increment('amount_due', $balance);
+        }
+
+        $invoiceRelations = ['customer', 'status', 'currency', 'tax', 'items.unitOfMeasure', 'items.invoiceable'];
+        return response()->json(['invoice' => $invoice->load($invoiceRelations)], 201);
     }
 
     public function printUrl(int $id): JsonResponse

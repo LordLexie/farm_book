@@ -385,16 +385,18 @@
             <tbody>
                 <?php $__currentLoopData = $proFormaInvoice->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php
-                    $name = $item->invoiceable?->name
+                    $name = $item->name
+                        ?? $item->invoiceable?->name
                         ?? $item->invoiceable?->description
                         ?? class_basename($item->invoiceable_type ?? 'Item');
+                    $desc = $item->description ?? $item->invoiceable?->description;
                 ?>
                 <tr>
                     <td class="text-right" style="color:#888;font-size:12px"><?php echo e($loop->iteration); ?></td>
                     <td>
                         <div class="item-name"><?php echo e($name); ?></div>
-                        <?php if($item->invoiceable && isset($item->invoiceable->description) && $item->invoiceable->description !== $name): ?>
-                            <div class="item-desc"><?php echo e($item->invoiceable->description); ?></div>
+                        <?php if($desc && $desc !== $name): ?>
+                            <div class="item-desc"><?php echo e($desc); ?></div>
                         <?php endif; ?>
                     </td>
                     <td class="text-right"><?php echo e(number_format($item->quantity, 2)); ?></td>
@@ -428,7 +430,7 @@
                 <td class="amount">– <?php echo e($currency); ?> <?php echo e(number_format($subtotal * $discount / 100, 2)); ?></td>
             </tr>
             <?php endif; ?>
-            <?php if($taxAmount > 0): ?>
+            <?php if($proFormaInvoice->tax): ?>
             <tr>
                 <td class="label"><?php echo e($proFormaInvoice->tax->name); ?> (<?php echo e($proFormaInvoice->tax->value); ?>%)</td>
                 <td class="amount">+ <?php echo e($currency); ?> <?php echo e(number_format($taxAmount, 2)); ?></td>

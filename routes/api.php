@@ -65,7 +65,8 @@ Route::prefix('v1')->group(function () {
         Route::get('pro-forma-invoices/{id}/print-url', [ProFormaInvoiceController::class, 'printUrl']);
         Route::apiResource('pro-forma-invoices', ProFormaInvoiceController::class);
 
-        // Quotations with print URL
+        // Quotations with convert + print URL
+        Route::post('quotations/{id}/convert', [QuotationController::class, 'convert']);
         Route::get('quotations/{quotation}/print-url', [QuotationController::class, 'printUrl']);
         Route::apiResource('quotations', QuotationController::class);
 
