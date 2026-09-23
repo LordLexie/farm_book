@@ -384,16 +384,18 @@
             <tbody>
                 @foreach($proFormaInvoice->items as $item)
                 @php
-                    $name = $item->invoiceable?->name
+                    $name = $item->name
+                        ?? $item->invoiceable?->name
                         ?? $item->invoiceable?->description
                         ?? class_basename($item->invoiceable_type ?? 'Item');
+                    $desc = $item->description ?? $item->invoiceable?->description;
                 @endphp
                 <tr>
                     <td class="text-right" style="color:#888;font-size:12px">{{ $loop->iteration }}</td>
                     <td>
                         <div class="item-name">{{ $name }}</div>
-                        @if($item->invoiceable && isset($item->invoiceable->description) && $item->invoiceable->description !== $name)
-                            <div class="item-desc">{{ $item->invoiceable->description }}</div>
+                        @if($desc && $desc !== $name)
+                            <div class="item-desc">{{ $desc }}</div>
                         @endif
                     </td>
                     <td class="text-right">{{ number_format($item->quantity, 2) }}</td>

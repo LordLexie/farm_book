@@ -10,6 +10,7 @@ class ProFormaInvoiceItem extends Model
 {
     protected $fillable = [
         'pro_forma_invoice_id', 'invoiceable_type', 'invoiceable_id',
+        'name', 'description',
         'unit_of_measure_id', 'quantity', 'unit_price', 'total',
     ];
 

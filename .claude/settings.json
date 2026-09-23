@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//opt/homebrew/etc/nginx/servers/**)",
+      "Read(//opt/homebrew/etc/nginx/**)",
+      "Bash(sudo nginx -t)",
+      "Bash(/opt/homebrew/bin/nginx -t)",
+      "Bash(curl -sS http://localhost:8000/)",
+      "Bash(curl -sSI http://localhost:8000/)"
+    ]
+  }
+}

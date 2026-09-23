@@ -117,8 +117,10 @@ class InvoiceController extends Controller
             $subtotal += $lineTotal;
             InvoiceItem::create([
                 'invoice_id'         => $invoiceId,
-                'invoiceable_type'   => $row['invoiceable_type'],
-                'invoiceable_id'     => $row['invoiceable_id'],
+                'invoiceable_type'   => $row['invoiceable_type'] ?? null,
+                'invoiceable_id'     => $row['invoiceable_id'] ?? null,
+                'name'               => $row['name'] ?? null,
+                'description'        => $row['description'] ?? null,
                 'unit_of_measure_id' => $row['unit_of_measure_id'],
                 'quantity'           => $row['quantity'],
                 'unit_price'         => $row['unit_price'],

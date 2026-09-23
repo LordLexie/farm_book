@@ -118,6 +118,8 @@ class ProFormaInvoiceController extends Controller
         $items   = $pf->items->map(fn($item) => [
             'invoiceable_type'   => $item->invoiceable_type,
             'invoiceable_id'     => $item->invoiceable_id,
+            'name'               => $item->name,
+            'description'        => $item->description,
             'unit_of_measure_id' => $item->unit_of_measure_id,
             'quantity'           => $item->quantity,
             'unit_price'         => $item->unit_price,
@@ -131,6 +133,8 @@ class ProFormaInvoiceController extends Controller
                 'invoice_id'         => $invoice->id,
                 'invoiceable_type'   => $row['invoiceable_type'],
                 'invoiceable_id'     => $row['invoiceable_id'],
+                'name'               => $row['name'],
+                'description'        => $row['description'],
                 'unit_of_measure_id' => $row['unit_of_measure_id'],
                 'quantity'           => $row['quantity'],
                 'unit_price'         => $row['unit_price'],
@@ -167,8 +171,10 @@ class ProFormaInvoiceController extends Controller
             $subtotal += $lineTotal;
             ProFormaInvoiceItem::create([
                 'pro_forma_invoice_id' => $pfId,
-                'invoiceable_type'     => $row['invoiceable_type'],
-                'invoiceable_id'       => $row['invoiceable_id'],
+                'invoiceable_type'     => $row['invoiceable_type'] ?? null,
+                'invoiceable_id'       => $row['invoiceable_id'] ?? null,
+                'name'                 => $row['name'] ?? null,
+                'description'          => $row['description'] ?? null,
                 'unit_of_measure_id'   => $row['unit_of_measure_id'],
                 'quantity'             => $row['quantity'],
                 'unit_price'           => $row['unit_price'],
