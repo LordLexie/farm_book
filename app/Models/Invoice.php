@@ -44,4 +44,9 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+
+    public function deliveryNotes(): HasMany
+    {
+        return $this->hasMany(DeliveryNote::class);
+    }
 }

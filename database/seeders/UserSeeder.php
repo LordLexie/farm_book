@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'view customers', 'manage customers',
             'view suppliers', 'manage suppliers',
             'view invoices', 'manage invoices',
+            'view delivery-notes', 'manage delivery-notes',
             'view bills', 'manage bills',
             'view purchases', 'manage purchases',
             'view payments', 'manage payments',

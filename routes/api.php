@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\ItemMasterController;
 use App\Http\Controllers\Api\V1\MilkProductionController;
 use App\Http\Controllers\Api\V1\MilkSaleController;
 use App\Http\Controllers\Api\V1\MilkRateController;
+use App\Http\Controllers\Api\V1\DeliveryNoteController;
 use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\ProFormaInvoiceController;
 use App\Http\Controllers\Api\V1\BillController;
@@ -59,6 +60,12 @@ Route::prefix('v1')->group(function () {
         // Invoices with print URL
         Route::get('invoices/{invoice}/print-url', [InvoiceController::class, 'printUrl']);
         Route::apiResource('invoices', InvoiceController::class);
+
+        // Delivery notes (created from invoices)
+        Route::get('invoices/{id}/delivery-note/draft', [DeliveryNoteController::class, 'draft']);
+        Route::post('invoices/{id}/delivery-note', [DeliveryNoteController::class, 'fromInvoice']);
+        Route::post('delivery-notes/{id}/cancel', [DeliveryNoteController::class, 'cancel']);
+        Route::apiResource('delivery-notes', DeliveryNoteController::class)->except(['store']);
 
         // Pro Forma Invoices with convert + print URL
         Route::post('pro-forma-invoices/{id}/convert', [ProFormaInvoiceController::class, 'convert']);
