@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bill;
+use App\Models\Customer;
 use App\Models\FarmConsumption;
 use App\Models\FarmLivestock;
 use App\Models\Invoice;
@@ -13,6 +14,7 @@ use App\Models\Purchase;
 use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
@@ -31,29 +33,75 @@ class AnalyticsController extends Controller
 
     public function summary(): JsonResponse
     {
-        $today      = Carbon::today();
-        $monthStart = Carbon::now()->startOfMonth();
-        $monthEnd   = Carbon::now()->endOfMonth();
-
-        $paidId      = Status::where('code', 'PAID')->value('id');
-        $cancelledId = Status::where('code', 'CANCELLED')->value('id');
         $aliveId     = Status::where('code', 'ALIVE')->value('id');
-        $overdueId   = Status::where('code', 'OVERDUE')->value('id');
+        $cancelledId = Status::where('code', 'CANCELLED')->value('id');
 
-        $unpaidStatuses = Bill::whereNotIn('status_id', array_filter([$paidId, $cancelledId]));
+        $invoices = Invoice::when($cancelledId, fn($q) => $q->where('status_id', '!=', $cancelledId));
 
         return response()->json([
-            'total_livestock'             => FarmLivestock::where('status_id', $aliveId)->count(),
-            'todays_milk_litres'          => (float) MilkProduction::whereDate('date', $today)->sum('quantity'),
-            'pending_bills_amount'        => (float) (clone $unpaidStatuses)->sum('total'),
-            'outstanding_invoice_balance' => (float) Invoice::where('balance', '>', 0)->sum('balance'),
-            'overdue_invoices_count'      => Invoice::where('status_id', $overdueId)->count(),
-            'unpaid_bills_count'          => (clone $unpaidStatuses)->count(),
-            'monthly_revenue'             => (float) MilkSale::whereBetween('date', [$monthStart, $monthEnd])->sum('total'),
-            'monthly_expenses'            => (float) (
-                Purchase::whereBetween('date', [$monthStart, $monthEnd])->sum('total') +
-                Bill::whereBetween('date', [$monthStart, $monthEnd])->sum('total')
-            ),
+            'total_clients'       => Customer::count(),
+            'total_livestock'     => FarmLivestock::where('status_id', $aliveId)->count(),
+            'total_invoices'      => (clone $invoices)->count(),
+            'total_invoice_value' => (float) (clone $invoices)->sum('total'),
+        ]);
+    }
+
+    public function invoiceYearly(Request $request): JsonResponse
+    {
+        $currentYear = (int) Carbon::now()->year;
+        $year        = (int) $request->query('year', $currentYear);
+        $cancelledId = Status::where('code', 'CANCELLED')->value('id');
+
+        $base = fn() => DB::table('invoices')
+            ->when($cancelledId, fn($q) => $q->where('invoices.status_id', '!=', $cancelledId));
+
+        $byMonth = $base()
+            ->whereYear('invoices.date', $year)
+            ->select(DB::raw('MONTH(invoices.date) as m'), DB::raw('SUM(invoices.total) as total'), DB::raw('COUNT(*) as cnt'))
+            ->groupBy('m')
+            ->get()
+            ->keyBy('m');
+
+        $monthly = collect(range(1, 12))->map(fn($m) => [
+            'month' => Carbon::create($year, $m, 1)->format('M'),
+            'total' => (float) ($byMonth[$m]->total ?? 0),
+            'count' => (int) ($byMonth[$m]->cnt ?? 0),
+        ]);
+
+        $clients = $base()
+            ->join('customers', 'invoices.customer_id', '=', 'customers.id')
+            ->whereYear('invoices.date', $year)
+            ->select(
+                'customers.id as customer_id',
+                'customers.name',
+                DB::raw('COUNT(invoices.id) as invoice_count'),
+                DB::raw('SUM(invoices.total) as total')
+            )
+            ->groupBy('customers.id', 'customers.name')
+            ->orderByDesc('total')
+            ->get()
+            ->map(fn($r) => [
+                'customer_id'   => $r->customer_id,
+                'name'          => $r->name,
+                'invoice_count' => (int) $r->invoice_count,
+                'total'         => (float) $r->total,
+            ]);
+
+        $years = $base()
+            ->selectRaw('DISTINCT YEAR(invoices.date) as y')
+            ->pluck('y')
+            ->map(fn($y) => (int) $y)
+            ->push($currentYear)
+            ->push($year)
+            ->unique()
+            ->sortDesc()
+            ->values();
+
+        return response()->json([
+            'year'    => $year,
+            'years'   => $years,
+            'monthly' => $monthly,
+            'clients' => $clients,
         ]);
     }
 

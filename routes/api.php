@@ -116,6 +116,7 @@ Route::prefix('v1')->group(function () {
         // AnalyticspP
         Route::prefix('analytics')->group(function () {
             Route::get('summary', [AnalyticsController::class, 'summary']);
+            Route::get('invoice-yearly', [AnalyticsController::class, 'invoiceYearly']);
             Route::get('milk-production-summary', [AnalyticsController::class, 'milkProductionSummary']);
             Route::get('milk-production-trend', [AnalyticsController::class, 'milkProductionTrend']);
             Route::get('milk-production-by-session', [AnalyticsController::class, 'milkProductionBySession']);
