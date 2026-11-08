@@ -31,8 +31,17 @@ class QuotationController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $request->validate([
+            'customer_id' => 'nullable|integer',
+            'date_from'   => 'nullable|date',
+            'date_to'     => 'nullable|date|after_or_equal:date_from',
+        ]);
+
         $perPage   = (int) $request->query('per_page', 15);
         $paginated = Quotation::with($this->relations())
+            ->when($request->filled('customer_id'), fn ($q) => $q->where('customer_id', $request->query('customer_id')))
+            ->when($request->filled('date_from'), fn ($q) => $q->whereDate('date', '>=', $request->query('date_from')))
+            ->when($request->filled('date_to'), fn ($q) => $q->whereDate('date', '<=', $request->query('date_to')))
             ->orderBy('date', 'desc')->orderBy('id', 'desc')->paginate($perPage);
 
         return response()->json([
